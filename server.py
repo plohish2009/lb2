@@ -76,7 +76,10 @@ class ServerMachine():
             print("Сервер остановлен пользователем.")
             return False
         print(f'Server: state 3.0 ({self.state})')
-        response = input('Введите ответ: ')
+        if self.current_data == 'PING':
+            response = 'PONG'
+        else:
+            response = 'Error command'
         try:
             os.write(self.out_fd, (response + '\n').encode())
             print("Ответ отправлен")

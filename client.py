@@ -31,7 +31,6 @@ class ClientMachine():
         self.root.geometry('1200x800+200+0')
         self.root.resizable(False, False)
 
-        # ---------- COLORS ----------
         PRIMARY = "#4CAF50"
         PRIMARY_HOVER = "#66BB6A"
         PRIMARY_PRESSED = "#388E3C"
@@ -50,7 +49,6 @@ class ClientMachine():
 
         style.configure(
             "App.TButton",
-            font=("Montserrat", 12, "regular"),
             padding=12,
             background=PRIMARY,
             foreground="white",
@@ -87,7 +85,6 @@ class ClientMachine():
                     widget.after(10, shrink)
             shrink()
 
-        # ---------- INPUT PANEL ----------
         input_title = tk.Label(
             self.root,
             text="Введите ваше сообщение",

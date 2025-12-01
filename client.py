@@ -71,7 +71,7 @@ class ClientMachine():
         input_title = tk.Label(
             self.root,
             text="Введите ваше сообщение",
-            font=(14, "bold"),
+            font=("Arial", 14, "bold"),
             bg=BG_MAIN,
             fg=TEXT_COLOR
         )
@@ -104,7 +104,7 @@ class ClientMachine():
         history_title = tk.Label(
             content_frame,
             text="История обмена сообщениями:",
-            font=(14, 'bold'),
+            font=("Arial", 14, 'bold'),
             bg=BG_CONTENT,
             fg=TEXT_COLOR
         )
@@ -115,7 +115,7 @@ class ClientMachine():
 
         self.text_widget = tk.Text(
             text_frame,
-            font=(11),
+            font=("Arial", 11, 'normal'),
             bg="#f8f8f8",
             fg=TEXT_COLOR,
             wrap=tk.WORD,
@@ -137,7 +137,7 @@ class ClientMachine():
         title_label = tk.Label(
             content_frame,
             text="Client Application",
-            font=('Montserrat', 16, 'bold'),
+            font=('Arial', 16, 'bold'),
             bg=BG_CONTENT,
             fg=TEXT_COLOR
         )

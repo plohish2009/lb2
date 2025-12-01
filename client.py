@@ -60,30 +60,12 @@ class ClientMachine():
         style.map(
             "App.TButton",
             background=[
-                ("active", PRIMARY_HOVER),
-                ("pressed", PRIMARY_PRESSED)
+                ("active", PRIMARY_HOVER)  
             ]
         )
 
-        def scale_up(event):
-            widget = event.widget
-            widget.scale_step = 0
-            def grow():
-                if widget.scale_step < 5:
-                    widget.scale_step += 1
-                    widget.tk.call("tk", "scaling", 1.0 + widget.scale_step * 0.02)
-                    widget.after(10, grow)
-            grow()
 
-        def scale_down(event):
-            widget = event.widget
-            widget.scale_step = 0
-            def shrink():
-                if widget.scale_step < 5:
-                    widget.scale_step += 1
-                    widget.tk.call("tk", "scaling", 1.1 - widget.scale_step * 0.02)
-                    widget.after(10, shrink)
-            shrink()
+        
 
         input_title = tk.Label(
             self.root,
@@ -100,17 +82,12 @@ class ClientMachine():
         self.entry = ttk.Entry(input_frame, width=80)
         self.entry.pack(side=tk.LEFT, padx=5)
 
-        # ---------- BUTTON PANEL ----------
         button_frame = tk.Frame(self.root, bg=BG_MAIN)
         button_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=20)
 
         def make_button(parent, text, cmd):
             btn = ttk.Button(parent, text=text, command=cmd, style="App.TButton")
             btn.pack(side=tk.LEFT, expand=True, padx=10)
-            btn.bind("<Enter>", scale_up)
-            btn.bind("<Leave>", scale_down)
-            btn.bind("<ButtonPress-1>", scale_down)
-            btn.bind("<ButtonRelease-1>", scale_up)
             return btn
 
         self.Button_Add = make_button(button_frame, "SEND COMMAND", self.add_message_to_stack)

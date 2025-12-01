@@ -19,7 +19,9 @@ class ServerMachine():
         os.mkfifo(self.outcoming)
         os.mkfifo(self.incoming)
         print('Каналы созданы!')
-        print(f'SERVER: State 1.0 ({self.state})')
+        print('Ждём подключения клинта...')
+        
+        #print(f'SERVER: State 1.0 ({self.state})')
     def cleanup(self):
         if self.in_fd:
             try:
@@ -46,6 +48,7 @@ class ServerMachine():
             except Exception as e:
                 print('Ошибка!')
                 return False
+        print(f'SERVER: State 1.0 ({self.state})')
         ready, _, _ = select.select([self.in_fd], [], [], None)
         if ready:
             try:
@@ -83,7 +86,6 @@ class ServerMachine():
                 print('Сервер завершил работу.')
                 return False
             self.state = 'WAITING_REQUEST'
-            print(f'SERVER: State 1.0 ({self.state})')
         except Exception as e:
             print(f"Ошибка отправки: {e}.")
         return True

@@ -186,6 +186,7 @@ class ClientMachine():
         try:
             self.out_fd = os.open(self.outcoming, os.O_WRONLY)
             self.in_fd = os.open(self.incoming, os.O_RDONLY | os.O_NONBLOCK)
+            self.add_message("Подключение к серверу установлено", "info")
             return True
         except FileNotFoundError:
             print('Не удалось подключиться к серверу!')

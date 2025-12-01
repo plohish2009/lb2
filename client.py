@@ -31,9 +31,9 @@ class ClientMachine():
         self.root.geometry('1200x800+200+0')
         self.root.resizable(False, False)
 
+
         PRIMARY = "#4CAF50"
         PRIMARY_HOVER = "#66BB6A"
-        PRIMARY_PRESSED = "#388E3C"
 
         BG_MAIN = "#f0f0f0"
         BG_CONTENT = "#ffffff"
@@ -41,8 +41,6 @@ class ClientMachine():
 
         self.root.configure(bg=BG_MAIN)
 
-        default_font = ("Montserrat", 12)
-        self.root.option_add("*Font", default_font)
 
         style = ttk.Style()
         style.theme_use("clam")
@@ -95,7 +93,6 @@ class ClientMachine():
         self.Button_Ping = make_button(button_frame, "Ping", self.add_to_stack)
         self.Button_Quit = make_button(button_frame, "Close", self.add_close_to_stack)
 
-        # ---------- MAIN CONTENT ----------
         content_frame = tk.Frame(
             self.root, bg=BG_CONTENT, relief=tk.SUNKEN, bd=1
         )
@@ -128,7 +125,6 @@ class ClientMachine():
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.text_widget.config(yscrollcommand=scrollbar.set)
 
-        # Цветовые теги
         self.text_widget.tag_configure("timestamp", foreground="#666666")
         self.text_widget.tag_configure("info", foreground="#333333")
         self.text_widget.tag_configure("sent", foreground="#2E7D32")
@@ -144,7 +140,6 @@ class ClientMachine():
         )
         title_label.pack(pady=20)
 
-        # ---------- STATE MACHINE ----------
         self.root.protocol('WM_DELETE_WINDOW', self.window_deleted)
 
         self.state = 'CREATING_REQUEST'

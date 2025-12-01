@@ -38,8 +38,6 @@ class ServerMachine():
             pass
             print("Ресурсы очищены!")
     def state_one(self):
-        #print(f'SERVER: State 1.0 ({self.state})')
-        #self.setup_pipes()
         if self.in_fd is None:
             try:
                 self.in_fd = os.open(self.incoming, os.O_RDONLY | os.O_NONBLOCK)
@@ -47,29 +45,27 @@ class ServerMachine():
                 print('Клиент подключён!')
             except Exception as e:
                 print('Ошибка!')
-                self.state = 'ERROR'
-                return
-
-        #print(f'SERVER: State 1.0 ({self.state})')
-        ready, _, _ = select.select([self.in_fd], [], [], 1.0)
+                return False
+        ready, _, _ = select.select([self.in_fd], [], [], None)
         if ready:
-            #print(f'SERVER: State 1.0 ({self.state})')
             try:
                 data = os.read(self.in_fd, 1024)
                 if data:
                     self.state = 'CHECKING_REQUEST'
                     self.current_data = data.decode().strip()
+                    return True
                 else:
                     print('Error!')
-                    self.state = 'ERROR'
+                    return False
             except Exception as e:
                 print('Ошибка!')
-                self.state = 'ERROR'
                 print(e)
+                return False
     def state_two(self):
         print(f'Server: state 2.0 ({self.state})')
         print(f"Received: {self.current_data}")
         self.state = 'SENDING_RESPONSE'
+        return True
     def state_three(self):
         
         if self.current_data == 'close':
@@ -90,7 +86,6 @@ class ServerMachine():
             print(f'SERVER: State 1.0 ({self.state})')
         except Exception as e:
             print(f"Ошибка отправки: {e}.")
-            self.state = "ERROR"
         return True
     def state_error(self):
         print(f'Ошибка отправки')
@@ -101,15 +96,11 @@ class ServerMachine():
         try:
             while True:
                 if self.state == 'WAITING_REQUEST':
-                    self.state_one()
+                    if not self.state_one(): break
                 elif self.state == 'CHECKING_REQUEST':
-                    self.state_two()
+                    if not self.state_two(): break
                 elif self.state == 'SENDING_RESPONSE':
-                    if not self.state_three():
-                        break
-                elif self.state == 'ERROR':
-                    self.state_error()
-                    break
+                    if not self.state_three(): break
                 time.sleep(0.1)
         except KeyboardInterrupt:
             print("\nСервер остановлен пользователем")

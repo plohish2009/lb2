@@ -13,17 +13,20 @@ class ClientMachine():
         self.root.destroy()
 
     def add_close_to_stack(self):
-        self.stack.append('close')
+        self.current_request = 'close'
+        self.request_pending = False
         self.window_deleted()
 
     def add_to_stack(self):
-        self.stack.append('PING')
+        self.current_request = 'PING'
+        self.request_pending = True
 
     def add_message_to_stack(self):
         mesage = self.entry.get()
         if mesage:
             self.entry.delete(0, tk.END)
-            self.stack.append(mesage)
+            self.current_request = mesage
+            self.request_pending = True
 
     def __init__(self):
         self.root = tk.Tk()
@@ -143,7 +146,8 @@ class ClientMachine():
         self.root.protocol('WM_DELETE_WINDOW', self.window_deleted)
 
         self.state = 'CREATING_REQUEST'
-        self.stack = []
+        self.current_request = None
+        self.request_pending = False
 
         self.outcoming = "/tmp/ping_pipe"
         self.incoming = "/tmp/pong_pipe"
@@ -188,24 +192,20 @@ class ClientMachine():
             return False
 
     def state_one(self):
+        if not self.request_pending:
+            return True
         self.add_message(f'Client: state 1.0 ({self.state})')
 
-        while len(self.stack) == 0:
-            time.sleep(0.2)
-
-        response = self.stack.pop()
-
         try:
-            os.write(self.out_fd, (response + '\n').encode())
+            os.write(self.out_fd, (self.current_request + '\n').encode())
             self.add_message("Сообщение отправлено!", "sent")
             self.state = 'WAITING_FOR_ANSWER'
-
-            if response == 'close':
+            self.request_pending = False
+            if self.current_request == 'close':
                 return False
         except Exception as e:
             print(f"Ошибка отправки: {e}")
-            self.state = "ERROR"
-
+            return False
         return True
 
     def state_two(self):

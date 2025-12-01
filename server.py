@@ -18,7 +18,6 @@ class ServerMachine():
             pass
         os.mkfifo(self.outcoming)
         os.mkfifo(self.incoming)
-        print('Каналы созданы, ёпта!')
         print(f'SERVER: State 1.0 ({self.state})')
     def cleanup(self):
         if self.in_fd:

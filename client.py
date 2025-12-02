@@ -34,7 +34,6 @@ class ClientMachine():
         self.root.geometry('1200x800+200+0')
         self.root.resizable(False, False)
 
-
         PRIMARY = "#4CAF50"
         PRIMARY_HOVER = "#66BB6A"
 
@@ -43,7 +42,6 @@ class ClientMachine():
         TEXT_COLOR = "#333333"
 
         self.root.configure(bg=BG_MAIN)
-
 
         style = ttk.Style()
         style.theme_use("clam")
@@ -61,7 +59,7 @@ class ClientMachine():
         style.map(
             "App.TButton",
             background=[
-                ("active", PRIMARY_HOVER)  
+                ("active", PRIMARY_HOVER)
             ]
         )
 
@@ -73,11 +71,10 @@ class ClientMachine():
             fg=TEXT_COLOR
         )
         title_label.pack(pady=(15, 5))
-        
 
         input_title = tk.Label(
             self.root,
-            text="Введите ваше сообщение",
+            text="Enter your message",
             font=("Arial", 14, "bold"),
             bg=BG_MAIN,
             fg=TEXT_COLOR
@@ -97,7 +94,7 @@ class ClientMachine():
             btn = ttk.Button(parent, text=text, command=cmd, style="App.TButton")
             btn.pack(side=tk.LEFT, expand=True, padx=10)
             return btn
-
+        self.Keypress_Enter = tk.
         self.Button_Add = make_button(button_frame, "SEND COMMAND", self.add_message_to_stack)
         self.Button_Clear = make_button(button_frame, "Clear", self.clear_history)
         self.Button_Ping = make_button(button_frame, "Ping", self.add_to_stack)
@@ -110,7 +107,7 @@ class ClientMachine():
 
         history_title = tk.Label(
             content_frame,
-            text="История обмена сообщениями:",
+            text="Legend of trades:",
             font=("Arial", 14, 'bold'),
             bg=BG_CONTENT,
             fg=TEXT_COLOR
@@ -140,8 +137,6 @@ class ClientMachine():
         self.text_widget.tag_configure("sent", foreground="#2E7D32")
         self.text_widget.tag_configure("received", foreground="#1565C0")
         self.text_widget.tag_configure("error", foreground="#C62828")
-
-        
 
         self.root.protocol('WM_DELETE_WINDOW', self.window_deleted)
 
@@ -186,10 +181,10 @@ class ClientMachine():
         try:
             self.out_fd = os.open(self.outcoming, os.O_WRONLY)
             self.in_fd = os.open(self.incoming, os.O_RDONLY | os.O_NONBLOCK)
-            self.add_message("Подключение к серверу установлено", "info")
+            self.add_message("Connected to server", "info")
             return True
         except FileNotFoundError:
-            print('Не удалось подключиться к серверу!')
+            print('Could not connect to server!')
             return False
 
     def state_one(self):
@@ -199,13 +194,13 @@ class ClientMachine():
 
         try:
             os.write(self.out_fd, (self.current_request + '\n').encode())
-            self.add_message("Сообщение отправлено!", "sent")
+            self.add_message("Message is sent!", "sent")
             self.state = 'WAITING_FOR_ANSWER'
             self.request_pending = False
             if self.current_request == 'close':
                 return False
         except Exception as e:
-            print(f"Ошибка отправки: {e}")
+            print(f"Error of sending: {e}")
             return False
         return True
 
@@ -227,21 +222,21 @@ class ClientMachine():
             response = data.decode().strip()
 
             if response == 'Error command':
-                self.add_message(f'Ответ получен! Вы получили: {response}', "error")
+                self.add_message(f'Response was received! You got: {response}', "error")
             else:
-                self.add_message(f'Ответ получен! Вы получили: {response}', "received")
+                self.add_message(f'Response was received! You got: {response}', "received")
             self.state = "CREATING_REQUEST"
         except Exception as e:
-            print(f"Ошибка чтения: {e}")
+            print(f"Error of reading: {e}")
             return False
 
         return True
 
     def run(self):
-        self.add_message("Клиент запускается...", "info")
+        self.add_message("Client was launched...", "info")
 
         if not self.connect_to_server():
-            self.add_message("не удалось подключиться к серверу", "error")
+            self.add_message("Could not connect to server", "error")
             self.cleanup()
             self.window_deleted()
             return

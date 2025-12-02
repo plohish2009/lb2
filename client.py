@@ -21,7 +21,7 @@ class ClientMachine():
         self.current_request = 'PING'
         self.request_pending = True
 
-    def add_message_to_stack(self):
+    def add_message_to_stack(self, event):
         mesage = self.entry.get()
         if mesage:
             self.entry.delete(0, tk.END)
@@ -94,7 +94,7 @@ class ClientMachine():
             btn = ttk.Button(parent, text=text, command=cmd, style="App.TButton")
             btn.pack(side=tk.LEFT, expand=True, padx=10)
             return btn
-        self.Keypress_Enter = tk.
+        self.entry.bind('<Return>', self.add_message_to_stack)
         self.Button_Add = make_button(button_frame, "SEND COMMAND", self.add_message_to_stack)
         self.Button_Clear = make_button(button_frame, "Clear", self.clear_history)
         self.Button_Ping = make_button(button_frame, "Ping", self.add_to_stack)

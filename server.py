@@ -21,7 +21,7 @@ class ServerMachine():
             pass
         os.mkfifo(self.outcoming)
         os.mkfifo(self.incoming)
-        print('Canals are created!')
+        print('Pipes were created!')
         print('Waiting for connection with client...')
 
         # print(f'SERVER: State 1.0 ({self.state})')
@@ -42,7 +42,7 @@ class ServerMachine():
             os.unlink(self.incoming)
         except FileNotFoundError:
             pass
-            print("Resourced are cleared!")
+            print("Sources are cleared!")
 
     def state_one(self):
         if self.in_fd is None:

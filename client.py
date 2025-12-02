@@ -32,7 +32,8 @@ class ClientMachine():
         self.root = tk.Tk()
         self.root.title('Client')
         self.root.geometry('1200x800+200+0')
-        self.root.resizable(False, False)
+
+        self.root.resizable(True, True)
 
         PRIMARY = "#4CAF50"
         PRIMARY_HOVER = "#66BB6A"
@@ -72,33 +73,6 @@ class ClientMachine():
         )
         title_label.pack(pady=(15, 5))
 
-        input_title = tk.Label(
-            self.root,
-            text="Enter your message",
-            font=("Arial", 14, "bold"),
-            bg=BG_MAIN,
-            fg=TEXT_COLOR
-        )
-        input_title.pack(pady=(20, 5))
-
-        input_frame = ttk.Frame(self.root)
-        input_frame.pack(pady=10)
-
-        self.entry = ttk.Entry(input_frame, width=80)
-        self.entry.pack(side=tk.LEFT)
-
-        button_frame = tk.Frame(self.root, bg=BG_MAIN)
-        button_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=20)
-
-        def make_button(parent, text, cmd):
-            btn = ttk.Button(parent, text=text, command=cmd, style="App.TButton")
-            btn.pack(side=tk.LEFT, expand=True, padx=10)
-            return btn
-        self.entry.bind('<Return>', self.add_message_to_stack)
-        self.Button_Add = make_button(button_frame, "SEND COMMAND", self.add_message_to_stack)
-        self.Button_Clear = make_button(button_frame, "Clear", self.clear_history)
-        self.Button_Ping = make_button(button_frame, "Ping", self.add_to_stack)
-        self.Button_Quit = make_button(button_frame, "Close", self.add_close_to_stack)
 
         content_frame = tk.Frame(
             self.root, bg=BG_CONTENT, relief=tk.SUNKEN, bd=1
@@ -107,7 +81,7 @@ class ClientMachine():
 
         history_title = tk.Label(
             content_frame,
-            text="Legend of trades:",
+            text="Message history:",
             font=("Arial", 14, 'bold'),
             bg=BG_CONTENT,
             fg=TEXT_COLOR
@@ -138,7 +112,48 @@ class ClientMachine():
         self.text_widget.tag_configure("received", foreground="#1565C0")
         self.text_widget.tag_configure("error", foreground="#C62828")
 
+
+        # Контейнер для всей строки
+        input_frame = tk.Frame(self.root, bg=BG_MAIN)
+        input_frame.pack(fill=tk.X, padx=20, pady=(0, 10))
+
+        # Отдельный контейнер только под label — с фоном на всю ширину
+        label_container = tk.Frame(input_frame, bg=BG_MAIN)
+        label_container.pack(fill=tk.X)
+
+        input_label = tk.Label(
+            label_container,
+            text="input:",
+            font=("Arial", 12, "bold"),
+            bg=BG_MAIN,
+            fg=TEXT_COLOR
+        )
+        input_label.pack(pady=(0, 5), anchor="center")   # центрирование текста
+
+        # Поле ввода — увеличено по высоте
+        self.entry = ttk.Entry(input_frame, width=80)
+        self.entry.pack(fill=tk.X, expand=True, ipady=6)
+        self.entry.bind('<Return>', self.add_message_to_stack)
+
+
+
+
+
+        button_frame = tk.Frame(self.root, bg=BG_MAIN)
+        button_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=20)
+
+        def make_button(parent, text, cmd):
+            btn = ttk.Button(parent, text=text, command=cmd, style="App.TButton")
+            btn.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=10)
+            return btn
+
+       
+
+        self.Button_Clear = make_button(button_frame, "Clear", self.clear_history)
+        self.Button_Quit = make_button(button_frame, "Close", self.add_close_to_stack)
+
         self.root.protocol('WM_DELETE_WINDOW', self.window_deleted)
+
 
         self.state = 'CREATING_REQUEST'
         self.current_request = None

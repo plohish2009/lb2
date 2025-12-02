@@ -65,7 +65,14 @@ class ClientMachine():
             ]
         )
 
-
+        title_label = tk.Label(
+            self.root,
+            text="Client Application",
+            font=('Arial', 16, 'bold'),
+            bg=BG_CONTENT,
+            fg=TEXT_COLOR
+        )
+        title_label.pack(pady=(15, 5))
         
 
         input_title = tk.Label(
@@ -134,14 +141,7 @@ class ClientMachine():
         self.text_widget.tag_configure("received", foreground="#1565C0")
         self.text_widget.tag_configure("error", foreground="#C62828")
 
-        title_label = tk.Label(
-            content_frame,
-            text="Client Application",
-            font=('Arial', 16, 'bold'),
-            bg=BG_CONTENT,
-            fg=TEXT_COLOR
-        )
-        title_label.pack(pady=20)
+        
 
         self.root.protocol('WM_DELETE_WINDOW', self.window_deleted)
 

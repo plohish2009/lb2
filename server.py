@@ -82,9 +82,6 @@ class ServerMachine():
         try:
             os.write(self.out_fd, (response + '\n').encode())
             print("Ответ отправлен")
-            if response == 'close':
-                print('Сервер завершил работу.')
-                return False
             self.state = 'WAITING_REQUEST'
         except Exception as e:
             print(f"Ошибка отправки: {e}.")

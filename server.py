@@ -2,6 +2,8 @@ import os
 import tkinter as tk
 import time
 import select
+
+
 class ServerMachine():
     def __init__(self):
         self.state = 'WAITING_REQUEST'
@@ -10,6 +12,7 @@ class ServerMachine():
         self.current_data = None
         self.out_fd = None
         self.in_fd = None
+
     def setup_pipes(self):
         try:
             os.unlink(self.outcoming)
@@ -18,10 +21,11 @@ class ServerMachine():
             pass
         os.mkfifo(self.outcoming)
         os.mkfifo(self.incoming)
-        print('Каналы созданы!')
-        print('Ждём подключения клинта...')
-        
-        #print(f'SERVER: State 1.0 ({self.state})')
+        print('Canals are created!')
+        print('Waiting for connection with client...')
+
+        # print(f'SERVER: State 1.0 ({self.state})')
+
     def cleanup(self):
         if self.in_fd:
             try:
@@ -38,15 +42,16 @@ class ServerMachine():
             os.unlink(self.incoming)
         except FileNotFoundError:
             pass
-            print("Ресурсы очищены!")
+            print("Resourced are cleared!")
+
     def state_one(self):
         if self.in_fd is None:
             try:
                 self.in_fd = os.open(self.incoming, os.O_RDONLY | os.O_NONBLOCK)
                 self.out_fd = os.open(self.outcoming, os.O_WRONLY)
-                print('Клиент подключён!')
+                print('Client is connected!')
             except Exception as e:
-                print('Ошибка!')
+                print('Error!')
                 return False
         print(f'SERVER: State 1.0 ({self.state})')
         ready, _, _ = select.select([self.in_fd], [], [], None)
@@ -61,35 +66,39 @@ class ServerMachine():
                     print('Error!')
                     return False
             except Exception as e:
-                print('Ошибка!')
+                print('Error!')
                 print(e)
                 return False
+
     def state_two(self):
         print(f'Server: state 2.0 ({self.state})')
         print(f"Received: {self.current_data}")
         self.state = 'SENDING_RESPONSE'
         return True
+
     def state_three(self):
-        
+
         if self.current_data == 'close':
-            print("Сервер остановлен пользователем.")
+            print("Server was stopped by client.")
             return False
         print(f'Server: state 3.0 ({self.state})')
-        if self.current_data == 'PING':
+        if self.current_data.upper() == 'PING':
             response = 'PONG'
         else:
             response = 'Error command'
         try:
             os.write(self.out_fd, (response + '\n').encode())
-            print("Ответ отправлен")
+            print("Response was sent")
             self.state = 'WAITING_REQUEST'
         except Exception as e:
-            print(f"Ошибка отправки: {e}.")
+            print(f"Error of sending: {e}.")
         return True
+
     def state_error(self):
-        print(f'Ошибка отправки')
+        print(f'Error of sending')
         self.cleanup()
         return False
+
     def run(self):
         self.setup_pipes()
         try:
@@ -102,21 +111,21 @@ class ServerMachine():
                     if not self.state_three(): break
                 time.sleep(0.1)
         except KeyboardInterrupt:
-            print("\nСервер остановлен пользователем")
+            print("\nServer was stopped by client")
         except Exception as e:
-            print(f"Неожиданная ошибка: {e}")
+            print(f"Unexpected error: {e}")
         finally:
 
             self.cleanup()
+
 
 def server():
     server_sm = ServerMachine()
     server_sm.run()
 
+
 if __name__ == "__main__":
     server()
-                    
-                
 
-       
+
 

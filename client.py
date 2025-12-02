@@ -156,6 +156,7 @@ class ClientMachine():
 
     def add_message(self, message, message_type="info"):
         timestamp = time.strftime("%H:%M:%S")
+        
 
         self.text_widget.config(state=tk.NORMAL)
 
@@ -227,10 +228,6 @@ class ClientMachine():
             response = data.decode().strip()
 
             self.add_message(f'Ответ получен! Вы получили: {response}', "received")
-
-            if response == 'close':
-                return False
-
             self.state = "CREATING_REQUEST"
         except Exception as e:
             print(f"Ошибка чтения: {e}")
